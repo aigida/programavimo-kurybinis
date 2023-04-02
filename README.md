@@ -12,3 +12,6 @@ https://www.pythontutorial.net/tkinter/ttk-style/
 learn git
 https://github.com/skills/introduction-to-github
 https://docs.github.com/en/get-started/quickstart/create-a-repo
+
+4 sav ka pdr:
+https://www.educba.com/trigonometric-functions-in-python/ (kaip naudotis math module)
