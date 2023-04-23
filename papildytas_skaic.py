@@ -152,7 +152,6 @@ button8 = create_button("8", 3, 1, button_color="light blue")
 button9 = create_button("9", 3, 2, button_color="light blue")
 button0 = create_button("0", 4, 1, button_color="light blue")
 button_dot = create_button(".", 5, 1, button_color="light blue")
-
 button_add = create_button("+", 1, 3, button_color="light green")
 button_subtract = create_button("-", 2, 3, button_color="light green")
 button_multiply = create_button("*", 3, 3, button_color="light green")
