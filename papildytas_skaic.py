@@ -147,7 +147,6 @@ def inches_to_centimeters():
         result.set(str(centimeters))
     else:
         result.set(f"{centimeters:.2e}")
-
 def centimeters_to_meters():
     expression = result.get()
     try:
