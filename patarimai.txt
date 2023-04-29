@@ -1,0 +1,26 @@
+klaidos:
+
+
+pataisytos klaidos:
+nereik nuliu po kablelio, kai sveikas skaicius 
+gali i teksto lauka bet ka rasyt, padaryti limita
+per daug apvalina verciant vertes
+sin cos tan kad butu deg
+kai ivedi dideli factoriala pacrashina
+rodyti errora kai dalyba is nulio
+rodyti errora su skaiciais kaip 00005
+neteisingai vercia cm2 i m2
+
+nelabai klaidos bet bus tvarkingiau patvarkius:
+atskiro button kad galetum pradet rasyt
+kai padidini ekrana kad butu fullscreen pats skaiciuotuvas
+
+patvarkyti:
+
+
+patarimai ka dar pridet:
+
+mygtuku spalvu keitimas
+grafikai
+spaudi du kartus = pakartoja veiksma
+gal dar daugiau funkciju ?

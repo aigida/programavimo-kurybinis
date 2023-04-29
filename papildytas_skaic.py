@@ -1,10 +1,11 @@
 from tkinter import *
-from tkinter import colorchooser #colorchooseris
-import math#math funkcija
+from tkinter import colorchooser
+import math
 import locale
+from decimal import Decimal
 locale.setlocale(locale.LC_ALL, 'en_EN')
 
-
+MAX_CHARS = 20
 
 def create_button(text, row, column, columnspan=1, button_color="white"):
     button = Button(root,
@@ -23,19 +24,53 @@ def on_button_click(button_text):
         result.set("")
     elif button_text == "=":
         expression = result.get()
-        result.set(locale.format_string("%.2f", eval(expression)))
+        try:
+            result_value = eval(expression)
+            if "." not in expression:
+                result_value = int(result_value)
+            if isinstance(result_value, float) and math.isnan(result_value):
+                raise ValueError("Not a number")
+            if isinstance(result_value, float) and math.isinf(result_value):
+                raise ValueError("Infinity")
+            if isinstance(result_value, float) and math.isinf(-result_value):
+                raise ValueError("-Infinity")
+            result.set(str(result_value))
+        except (SyntaxError, ZeroDivisionError, ValueError):
+            result.set("Error")
     elif button_text == "Color":
         color = colorchooser.askcolor()[1]
         root.config(bg=color)
     elif button_text == "sin":
         expression = result.get()
-        result.set(math.sin(eval(expression)))
+        angle = math.radians(eval(expression))
+        sin_value = math.sin(angle)
+        if math.isclose(sin_value, 0, rel_tol=1e-9, abs_tol=1e-9):
+            result.set("0")
+        else:
+            result.set(str(sin_value))
     elif button_text == "cos":
         expression = result.get()
-        result.set(math.cos(eval(expression)))
+        angle = math.radians(eval(expression))
+        if angle % (math.pi / 2) == 0: 
+            result.set(round(math.cos(angle)))
+        else:
+            result.set(round(math.cos(angle), 10))
     elif button_text == "tan":
         expression = result.get()
-        result.set(math.tan(eval(expression)))
+        angle_deg = eval(expression)
+        if angle_deg % 180 == 0:
+            result.set("0")
+        elif angle_deg % 90 == 0:
+            result.set("Error")
+        else:
+            angle_rad = math.radians(angle_deg)
+            result_value = math.tan(angle_rad)
+            if math.isclose(result_value, 0, rel_tol=1e-9, abs_tol=1e-9):
+                result.set("0")
+            else:
+                result.set(str(result_value))
+
+
     elif "%" in result.get():
         expression = result.get().replace("%", "")
         if button_text is not None:
@@ -78,7 +113,12 @@ def on_button_click(button_text):
         if n < 0:
             result.set("Error")
         else:
-            result.set(str(math.factorial(n)))
+            decimal_n = Decimal(n)
+            decimal_factorial = Decimal(math.factorial(min(n, 4300)))
+            if len(str(decimal_factorial)) > 4300:
+                result.set("Error")
+            else:
+                result.set(str(decimal_factorial))
     else:
         result.set(result.get() + button_text)
         
@@ -96,29 +136,69 @@ def logarithm_base_10():
     result.set(math.log10(eval(expression)))
 
 def inches_to_centimeters():
-    inches = float(result.get())
+    expression = result.get()
+    try:
+        inches = float(expression)
+    except ValueError:
+        result.set("Error")
+        return
     centimeters = inches * 2.54
-    result.set(locale.format_string("%.2f", centimeters))
+    if abs(centimeters) < 10**9:
+        result.set(str(centimeters))
+    else:
+        result.set(f"{centimeters:.2e}")
 
 def centimeters_to_meters():
-    centimeters = float(result.get())
+    expression = result.get()
+    try:
+        centimeters = float(expression)
+    except ValueError:
+        result.set("Error")
+        return
     meters = centimeters * 0.01
-    result.set(locale.format_string("%.2f", meters))
+    if abs(meters) < 10**9:
+        result.set(str(meters))
+    else:
+        result.set(f"{meters:.2e}")
 
 def cm2_to_m2():
-    cm2 = float(result.get())
+    expression = result.get()
+    try:
+        cm2 = float(expression)
+    except ValueError:
+        result.set("Error")
+        return
     m2 = cm2 / 10000
-    result.set(locale.format_string("%.4f", m2))
+    if abs(m2) < 10**9:
+        result.set(str(m2))
+    else:
+        result.set(f"{m2:.2e}")
 
 def g_to_kg():
-    g = float(result.get())
+    expression = result.get()
+    try:
+        g = float(expression)
+    except ValueError:
+        result.set("Error")
+        return
     kg = g / 1000
-    result.set(locale.format_string("%.3f", kg))
+    if abs(kg) < 10**9:
+        result.set(str(kg))
+    else:
+        result.set(f"{kg:.2e}")
 
 def ml_to_l():
-    ml = float(result.get())
+    expression = result.get()
+    try:
+        ml = float(expression)
+    except ValueError:
+        result.set("Error")
+        return
     l = ml / 1000
-    result.set(locale.format_string("%.3f", l))
+    if abs(l) < 10**9:
+        result.set(str(l))
+    else:
+        result.set(f"{l:.2e}")
 
 def square():
     current_value = float(result.get())
@@ -135,10 +215,13 @@ root.geometry("264x254")
 
 result = StringVar()
 
-entry = Entry(root,
-              textvariable=result,
-              width=20, 
-              font=("Arial", 16))
+def validate_entry(text):
+    allowed = set("0123456789+-*/().")
+    return set(text).issubset(allowed)
+
+vcmd = (root.register(validate_entry), '%S')
+
+entry = Entry(root, textvariable=result, width=20, font=("Arial", 16), validate="key", validatecommand=vcmd)
 entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
 
 button1 = create_button("1", 1, 0, button_color="light blue")
